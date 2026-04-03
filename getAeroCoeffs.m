@@ -1,16 +1,7 @@
-function [outputArg1,outputArg2] = getAero(inputArg1,inputArg2)
-%GETAERO Summary of this function goes here
-%   Detailed explanation goes here
-arguments (Input)
-    inputArg1
-    inputArg2
-end
+function [CL,CD,CM] = getAeroCoeffs(alpha,deltaE,deltaC)
+    CL = 0;
+    CD = 0;
+    CM = 0;
 
-arguments (Output)
-    outputArg1
-    outputArg2
-end
-
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+    
 end

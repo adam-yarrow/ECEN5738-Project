@@ -1,16 +1,13 @@
-function [outputArg1,outputArg2] = getThrust(inputArg1,inputArg2)
-%GETTHRUST Summary of this function goes here
-%   Detailed explanation goes here
-arguments (Input)
-    inputArg1
-    inputArg2
-end
+function [T] = getThrust(alpha, phi)
+%{
+    Generates thrust as a function of alpha, phi. Both in rad
+%} 
+    T = 0;
+    CT_alpha3 = [];
+    CT_alpha2 = [];
+    CT_alpha = [];
+    CT_0 = [];
 
-arguments (Output)
-    outputArg1
-    outputArg2
-end
-
-outputArg1 = inputArg1;
-outputArg2 = inputArg2;
+    T = CT_alpha3.*alpha.^3 + CT_alpha2.*alpha.^2 + CT_alpha.*alpha + CT_0;
+    
 end
