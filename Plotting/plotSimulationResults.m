@@ -8,17 +8,19 @@ const = ModelParams();
 %% States
 % TODO add regulation plots
 figure('Name',sprintf('%s - states',simName));
+hStates = [];
 for iState = 1:const.nStates
-    subplot(2,3,iState)
+    hStates(end+1) = subplot(2,3,iState);
     plotState(simData.times, simData.x(iState,:), ...
         const.stateNames{iState}, const.statePlottingUnits{iState},...
         const.statePlottingSF(iState));
 end
 
 % Alpha
-subplot(2,3,6);
+hStates(end+1) = subplot(2,3,6);
 plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1));
 
+linkaxes(hStates,'x');
 subtitle(sprintf('States vs Time - %s', simName))
 
 

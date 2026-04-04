@@ -15,6 +15,9 @@ function [T] = getThrust(alpha, phiCmd)
     CT_0 = beta(7)*phi + beta(8);
 
     T = CT_alpha3.*alpha.^3 + CT_alpha2.*alpha.^2 + CT_alpha.*alpha + CT_0;
-    T = 0;
+
+    if ModelParams('thrust','fDisableEngine')
+        T = 0;
+    end
 end
 

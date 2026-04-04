@@ -8,7 +8,7 @@ xIC_Regulation = [2077;
                   0;
                   0;
                   25908];
-tEnd = 300;
+tEnd = 60;
 simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
 
 plotSimulationResults(simData_OL,'OL Controller');

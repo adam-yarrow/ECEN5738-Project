@@ -11,10 +11,16 @@ function [simData] = Simulation(xIC, fController, tEnd)
 
     const = ModelParams();
 
+    %% Warnings
+    if const.thrust.fDisableEngine || const.aero.fMakeStaticallyStable
+        warning('Naughty naughty, you are playing on easy mode. Build a better controller.')
+    end
+
+    %% Data Packaging
     simData = struct();
     simData.times = 0:const.dT:tEnd;
 
-    % Run Sim
+    %% Run Sim
     %% TODO - maybe replace this single call with a for loop so can pull out controller 
     %% sub states
 

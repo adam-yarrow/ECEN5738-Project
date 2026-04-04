@@ -49,6 +49,7 @@ function [const] = ModelParams(varargin)
     beta(8) = -1.0090e2;  % lb·ft^-1
     % TODO - does this need to be converted to N not kg?
     const.thrust.beta = beta*(LB_TO_KG/FEET_TO_M) * vehicleLength; 
+    const.thrust.fDisableEngine = true; 
 
     % Aero Coeffs
     const.aero.refArea = (17*FEET_TO_M^2)/FEET_TO_M * vehicleLength; % 17ft^2/ft normalized to vehicle length
@@ -77,6 +78,8 @@ function [const] = ModelParams(varargin)
     const.aero.CM_0 = 1.8979E-1;
     const.aero.CM_deltaE = -1.2897; % rad^-1
     const.aero.CM_deltaC = kec * const.aero.CM_deltaE;
+
+    const.aero.fMakeStaticallyStable = true; 
     
     %% Pull out specific parameter if required
     nArgs = length(varargin);

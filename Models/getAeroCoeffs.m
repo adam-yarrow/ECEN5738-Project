@@ -11,4 +11,10 @@ function [CL,CD,CM] = getAeroCoeffs(alpha,deltaE,deltaC)
     CM = c.CM_alphaSq*alpha.^2 + c.CM_alpha*alpha + c.CM_deltaE*deltaE + ...
         c.CM_deltaC*deltaC + c.CM_0;
     
+    % Make statically stable
+    if c.fMakeStaticallyStable
+        CM = -c.CM_alphaSq*alpha.^2 + -c.CM_alpha*alpha + c.CM_deltaE*deltaE + ...
+            c.CM_deltaC*deltaC + c.CM_0;
+    end
+    
 end
