@@ -4,7 +4,8 @@ function [T] = getThrust(alpha, phiCmd)
 %} 
     
     % clamp phi to valid range
-    phi = max(0.1, min(phiCmd,1.2)); % Saturation
+    phi = max(0.0, min(phiCmd,1.2)); % Saturation
+    %% TODO - should i just allow it to go to zero???
     
     % Thrusting hard
     beta = ModelParams('thrust','beta');
@@ -14,5 +15,6 @@ function [T] = getThrust(alpha, phiCmd)
     CT_0 = beta(7)*phi + beta(8);
 
     T = CT_alpha3.*alpha.^3 + CT_alpha2.*alpha.^2 + CT_alpha.*alpha + CT_0;
+    T = 0;
 end
 

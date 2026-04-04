@@ -9,9 +9,13 @@ function [const] = ModelParams(varargin)
     const.nStates = 5;
     const.stateNames = {'V','gamma','q','theta','h'};
     const.stateUnits = {'m/s','rad','rad/s','rad','m'};
+    const.statePlottingUnits = {'m/s','deg','deg/s','deg','km'};
+    const.statePlottingSF = [1, rad2deg(1), rad2deg(1), rad2deg(1), 1E-3];
 
     const.inputNames = {'phi','deltaE','deltaC'};
     const.inputUnits = {'-','rad','rad'};
+    const.inputPlottingUnits = {'-','deg','deg'};
+    const.inputPlottingSF = [1, rad2deg(1), rad2deg(1)];
 
     const.g = 9.81; % m/s^2
 

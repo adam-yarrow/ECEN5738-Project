@@ -15,10 +15,17 @@ function [simData] = Simulation(xIC, fController, tEnd)
     simData.times = 0:const.dT:tEnd;
 
     % Run Sim
-    %% TODO - decide if we wanted to do any ZOH on the controller?
+    %% TODO - maybe replace this single call with a for loop so can pull out controller 
+    %% sub states
+
+    %% OR just have a class for the controller? - gets weird with multi-subticks?
+
     [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController), ...
                             simData.times, xIC);
-    simData.x = xResults;    
+    simData.x = xResults';    
+
+    %% TODO - extract controller internal parameters here?
+    %% OR possibly just write your own RK45 so I can log the data easier
 end
 
 %% Helpers

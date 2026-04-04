@@ -1,3 +1,4 @@
 function [alpha] = calcAlpha(x)
-    alpha = x(4) - x(2);
+    % Assuming x = 5 x N
+    alpha = x(4,:) - x(2,:);
 end
