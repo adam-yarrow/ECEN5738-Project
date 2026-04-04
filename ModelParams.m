@@ -3,6 +3,8 @@ function [const] = ModelParams(varargin)
     LB_TO_KG = 0.453;
 
     const = struct();
+
+    const.dT = 1E-4; % TODO - decide on this???
     
     const.nStates = 5;
     const.stateNames = {'V','gamma','q','theta','h'};
@@ -13,7 +15,6 @@ function [const] = ModelParams(varargin)
 
     const.g = 9.81; % m/s^2
 
-    % TODO - update these with paper values
     %{
         NOTE: using "Control Orientated Modelling of an Air-Breathing
         Hypersonic Vehicle" by Parker, Bolender and Doman as the master
@@ -23,6 +24,9 @@ function [const] = ModelParams(varargin)
         scaled by the vehicle length.
 
         Assuming that the canard is identical to the elevator in lift/drag.
+
+        Lordy what I'd give for metric units that are consistent between
+        papers.
     %}
 
     vehicleLength = 100*FEET_TO_M; % 100 ft to m
@@ -39,7 +43,8 @@ function [const] = ModelParams(varargin)
     beta(6) = -2.4216e3;  % lb·ft^-1·rad^-1
     beta(7) =  6.3785e3;  % lb·ft^-1
     beta(8) = -1.0090e2;  % lb·ft^-1
-    const.thrust.beta = beta ;
+    % TODO - does this need to be converted to N not kg?
+    const.thrust.beta = beta*(LB_TO_KG/FEET_TO_M) * vehicleLength; 
 
     % Aero Coeffs
     const.aero.refArea = (17*FEET_TO_M^2)/FEET_TO_M * vehicleLength; % 17ft^2/ft normalized to vehicle length
@@ -68,11 +73,7 @@ function [const] = ModelParams(varargin)
     const.aero.CM_0 = 1.8979E-1;
     const.aero.CM_deltaE = -1.2897; % rad^-1
     const.aero.CM_deltaC = kec * const.aero.CM_deltaE;
-
-
     
-
-
     %% Pull out specific parameter if required
     nArgs = length(varargin);
     if nArgs > 0

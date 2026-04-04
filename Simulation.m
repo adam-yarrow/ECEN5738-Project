@@ -1,10 +1,32 @@
-function [outputArg1,outputArg2] = Simulation(inputArg1,inputArg2)
+function [simData] = Simulation(xIC, fController, tEnd)
+    %{
+        xIC = initial state for simulation
+        fController = function handler to a controller of the form:
+            u = f(t,x), where x = state of vehicle (V, gamma, q, theta,
+            height), u = [phi, deltaE, deltaC]. Using time as an option too
+            in case trying to track a reference trajectory embedded in
+            fController.
+        tEnd = End time (s)
+    %}
+
+    const = ModelParams();
+
+    simData = struct();
+    simData.times = 0:const.dT:tEnd;
+
     % Run Sim
+    %% TODO - decide if we wanted to do any ZOH on the controller?
+    [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController), ...
+                            simData.times, xIC);
+    simData.x = xResults;    
+end
 
-    % Inputs - IC
-
-
-    % TODO - decide if we ZOH discretize or just let ODE45 handle it?
-
-    
+%% Helpers
+function xDot = plantDynCL(t, x, fController)
+    %{
+        Wrapper for CL dynamics to make everything smooth and continous.
+        Aka "we have ZOH at home"
+    %}    
+    u = fController(t, x);
+    xDot = getDynamics(x, u);    
 end
