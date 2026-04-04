@@ -21,14 +21,21 @@ hStates(end+1) = subplot(2,3,6);
 plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1));
 
 linkaxes(hStates,'x');
-subtitle(sprintf('States vs Time - %s', simName))
+sgtitle(sprintf('States vs Time - %s', simName))
 
 
 %% Control Inputs
-%% TODO - either re-run states through controller, or save this with the class approach
+figure('Name',sprintf('%s - control inputs',simName));
+hInputs = [];
+for iInput = 1:const.nInputs
+    hInputs(end+1) = subplot(1,const.nInputs,iInput);
+    plotState(simData.times, simData.u(iInput,:), const.inputNames{iInput},...
+                const.inputPlottingUnits{iInput}, const.inputPlottingSF(iInput));
+end
+linkaxes(hInputs,'x');
+sgtitle(sprintf('Inputs vs Time - %s',simName));
 
-
-%% Controller Internals??
+%% Anything Else?
 
 end
 

@@ -12,6 +12,7 @@ function [const] = ModelParams(varargin)
     const.statePlottingUnits = {'m/s','deg','deg/s','deg','km'};
     const.statePlottingSF = [1, rad2deg(1), rad2deg(1), rad2deg(1), 1E-3];
 
+    const.nInputs = 3;
     const.inputNames = {'phi','deltaE','deltaC'};
     const.inputUnits = {'-','rad','rad'};
     const.inputPlottingUnits = {'-','deg','deg'};
