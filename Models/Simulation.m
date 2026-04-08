@@ -40,5 +40,7 @@ function xDot = plantDynCL(t, x, fController)
         Aka "we have ZOH at home"
     %}    
     u = fController(t, x);
-    xDot = getDynamics(x, u);    
+    % [F, G] = getFGDynamics(x);
+    % xDot = F + G*u;
+    xDot = getDynamics(x, u);
 end

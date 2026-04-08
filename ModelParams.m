@@ -4,7 +4,7 @@ function [const] = ModelParams(varargin)
 
     const = struct();
 
-    const.dT = 1E-4; % TODO - decide on this???
+    const.dT = 1E-2; % TODO - decide on this???
     
     const.nStates = 5;
     const.stateNames = {'V','gamma','q','theta','h'};
@@ -79,6 +79,9 @@ function [const] = ModelParams(varargin)
     const.aero.CM_0 = 1.8979E-1;
     const.aero.CM_deltaE = -1.2897; % rad^-1
     const.aero.CM_deltaC = kec * const.aero.CM_deltaE;
+
+    const.constraint.amax = deg2rad(4.5);
+    const.constraint.phimax = 1.2;
 
     const.aero.fMakeStaticallyStable = true; 
     
