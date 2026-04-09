@@ -19,17 +19,34 @@ function [simData] = Simulation(xIC, fController, tEnd)
     %% Data Packaging
     simData = struct();
     simData.times = 0:const.dT:tEnd;
+    nTimes = numel(simData.times);
 
     %% Run Sim
-    [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController, const), ...
-                            simData.times, xIC);
-    simData.x = xResults';    
+    xResults = zeros(nTimes, const.nStates);
+    if const.continuous == true
+        [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController, const), ...
+                                simData.times, xIC);
+    else
+        xResults(1,:) = xIC';
+        xk = xIC;
+        u = zeros(3,1);
+        for k=2:nTimes
+            tkprev = simData.times(k-1);
+            tk = simData.times(k);
+            [u,~] = fController(tkprev, xk, const);
+            [~, xtraj] = ode45(@(t,x) getDynamics(x, u, const), ...
+                                    [0,const.dT], xk);
+            disp(tk)
+            xk = xtraj(end,:)';
+            xResults(k,:) = xk';
+        end
+    end
+    simData.x = xResults';   
 
     %% Extract Control Actions
-    nTimes = numel(simData.times);
     simData.u = NaN(const.nInputs,nTimes);
     for i = 1:nTimes
-        simData.u(:,i) = fController(simData.times(i), simData.x(:,i), const);
+        [simData.u(:,i),~] = fController(simData.times(i), simData.x(:,i), const);
     end
 end
 
@@ -39,7 +56,7 @@ function xDot = plantDynCL(t, x, fController, const)
         Wrapper for CL dynamics to make everything smooth and continous.
         Aka "we have ZOH at home"
     %}    
-    u = fController(t, x, const);
+    [u,~] = fController(t, x, const);
     % [F, G] = getFGDynamics(x);
     % xDot = F + G*u;
     xDot = getDynamics(x, u, const);
