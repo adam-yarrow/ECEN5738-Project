@@ -25,7 +25,7 @@ R_ARE = diag([81.6, 4.44e5, 81.6]);
 [P, ~, ~] = care(F, G, Q_ARE, R_ARE);
 
 %% Wrap CLF for the Simulation
-clf_wrapper = @(t, x) calcCLFControl(x, x_r, xDot_r, P);
+clf_wrapper = @(t, x, const) calcCLFControl(x, x_r, xDot_r, P, const);
 
 %% Defining ICs
 

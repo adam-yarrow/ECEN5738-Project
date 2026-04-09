@@ -1,6 +1,6 @@
-function [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P)
+function [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P, const)
 
-    [f_x, g_x] = getFGDynamics(x);
+    [f_x, g_x] = getFGDynamics(x, const);
     f_x_4 = f_x(1:4);
     g_x_4 = g_x(1:4, :);
     

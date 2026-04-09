@@ -1,6 +1,6 @@
-function u = calcCLFControl(x, x_r, xDot_r, P)
+function u = calcCLFControl(x, x_r, xDot_r, P, const)
     % Get the Lie Derivatives
-    [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P);
+    [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P, const);
     z = x(1:4) - x_r(1:4);
     
     % Defining V and other params
