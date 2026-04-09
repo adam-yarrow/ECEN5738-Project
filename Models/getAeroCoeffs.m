@@ -1,5 +1,5 @@
-function [CL,CD,CM] = getAeroCoeffs(alpha,deltaE,deltaC)
-    c = ModelParams('aero');
+function [CL,CD,CM] = getAeroCoeffs(alpha,deltaE,deltaC, const)
+    c = const.aero;
 
     CL = c.CL_alpha*alpha + c.CL_deltaE*deltaE + c.CL_deltaC*deltaC + c.CL_0;
 

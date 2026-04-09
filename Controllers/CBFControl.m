@@ -1,8 +1,8 @@
-function [u] = CBFControl(t,x)
-    c = ModelParams('constraint');
+function [u] = CBFControl(t, x, const)
+    c = const.constraint;
 
-    Lfh = getLfh(x);
-    Lgh = getLgh(x);
+    Lfh = getLfh(x, const);
+    Lgh = getLgh(x, const);
 
     alpha = calcAlpha(x);
     k = 1;

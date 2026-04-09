@@ -1,4 +1,4 @@
-function [u] = OpenLoopControl(t,x)
+function [u] = OpenLoopControl(t,x,const)
     %{
         Pray you stay in control I guess?
         Setting phi = deltaE = deltaC = 0

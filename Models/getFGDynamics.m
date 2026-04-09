@@ -1,9 +1,8 @@
-function [xDot_f, xDot_g] = getFGDynamics(x)
+function [xDot_f, xDot_g] = getFGDynamics(x, const)
 %{
     Gets f(x) and g(x) from xDot = f(x)+g(x)u
     x = [V, gamma, q, theta, h]
 %}
-    const = ModelParams();
 
     % States and Derived params
     V = x(1);
@@ -27,7 +26,7 @@ function [xDot_f, xDot_g] = getFGDynamics(x)
     qBar = 0.5.* rho .* V.^2; % Pa
 
     % Get External Forces
-    beta = ModelParams('thrust','beta');
+    beta = const.thrust.beta;
     CT_alpha3_f = beta(2);
     CT_alpha3_g_phi = beta(1);
     CT_alpha2_f = beta(4);
@@ -40,12 +39,12 @@ function [xDot_f, xDot_g] = getFGDynamics(x)
     T_f = CT_alpha3_f.*alpha.^3 + CT_alpha2_f.*alpha.^2 + CT_alpha_f.*alpha + CT_0_f;
     T_g_phi = CT_alpha3_g_phi.*alpha.^3 + CT_alpha2_g_phi.*alpha.^2 + CT_alpha_g_phi.*alpha + CT_0_g_phi;
 
-    if ModelParams('thrust','fDisableEngine')
+    if const.thrust.fDisableEngine
         T_f = 0;
         T_g_phi = 0;
     end
 
-    c = ModelParams('aero');
+    c = const.aero;
 
     CL_f = c.CL_alpha*alpha + c.CL_0;
     CL_g_deltaE = c.CL_deltaE;

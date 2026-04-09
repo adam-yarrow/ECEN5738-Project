@@ -1,4 +1,4 @@
-function [T] = getThrust(alpha, phiCmd)
+function [T] = getThrust(alpha, phiCmd, const)
 %{
     Generates thrust as a function of alpha, phi. Both in rad
 %} 
@@ -8,7 +8,7 @@ function [T] = getThrust(alpha, phiCmd)
     %% TODO - should i just allow it to go to zero???
     
     % Thrusting hard
-    beta = ModelParams('thrust','beta');
+    beta = const.thrust.beta;
     CT_alpha3 = beta(1)*phi + beta(2);
     CT_alpha2 = beta(3)*phi + beta(4);
     CT_alpha = beta(5)*phi + beta(6);
@@ -16,7 +16,7 @@ function [T] = getThrust(alpha, phiCmd)
 
     T = CT_alpha3.*alpha.^3 + CT_alpha2.*alpha.^2 + CT_alpha.*alpha + CT_0;
 
-    if ModelParams('thrust','fDisableEngine')
+    if const.thrust.fDisableEngine
         T = 0;
     end
 end

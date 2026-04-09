@@ -1,9 +1,8 @@
-function [xDot] = getDynamics(x, u)
+function [xDot] = getDynamics(x, u, const)
 %{
     Gets xDot = f(x,u)
     x = [V, gamma, q, theta, h]
 %}
-    const = ModelParams();
 
     % Control Inputs - TODO - might just pass a function in here to execute
     % as a function of state???
@@ -33,8 +32,8 @@ function [xDot] = getDynamics(x, u)
     qBar = 0.5.* rho .* V.^2; % Pa
 
     % Get External Forces
-    T = getThrust(alpha, phi);
-    [CL, CD, CM] = getAeroCoeffs(alpha, deltaE, deltaC);
+    T = getThrust(alpha, phi, const);
+    [CL, CD, CM] = getAeroCoeffs(alpha, deltaE, deltaC, const);
 
     D = qBar.*S.*CD;
     L = qBar.*S.*CL;
