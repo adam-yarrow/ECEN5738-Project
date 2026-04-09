@@ -10,8 +10,8 @@ xIC_Regulation = [2077;
                   25908];
 tEnd = 60;
 
-simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
-plotSimulationResults(simData_OL,'OL Controller');
-
 simData_CBF = Simulation(xIC_Regulation, @CBFControl,tEnd);
 plotSimulationResults(simData_CBF,'CBF Controller');
+
+simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
+plotSimulationResults(simData_OL,'OL Controller');
