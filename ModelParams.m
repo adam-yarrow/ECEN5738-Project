@@ -2,6 +2,8 @@ function [const] = ModelParams(varargin)
     FEET_TO_M = 0.3048;
     LB_TO_KG = 0.453;
 
+    SLUGS_PerFt3_To_Kg_perM3 = 515.37881839;
+
     const = struct();
 
     const.dT = 1E-2; % TODO - decide on this???
@@ -19,6 +21,11 @@ function [const] = ModelParams(varargin)
     const.inputPlottingSF = [1, rad2deg(1), rad2deg(1)];
 
     const.g = 9.81; % m/s^2
+
+    const.atmo.fUseSimpleAtmo = true;
+    const.atmo.h0 = 8.5E4 *FEET_TO_M; 
+    const.atmo.rho0 = 6.7429E-5 * SLUGS_PerFt3_To_Kg_perM3; 
+    const.atmo.hs = 2.1358*FEET_TO_M; 
 
     %{
         NOTE: using "Control Orientated Modelling of an Air-Breathing
@@ -49,8 +56,8 @@ function [const] = ModelParams(varargin)
     beta(7) =  6.3785e3;  % lb·ft^-1
     beta(8) = -1.0090e2;  % lb·ft^-1
     % TODO - does this need to be converted to N not kg?
-    const.thrust.beta = beta*(LB_TO_KG/FEET_TO_M) * vehicleLength; 
-    const.thrust.fDisableEngine = true; 
+    const.thrust.beta = beta*(LB_TO_KG/FEET_TO_M) * vehicleLength * const.g; 
+    const.thrust.fDisableEngine = false; 
 
     % Aero Coeffs
     const.aero.refArea = (17*FEET_TO_M^2)/FEET_TO_M * vehicleLength; % 17ft^2/ft normalized to vehicle length
@@ -83,7 +90,7 @@ function [const] = ModelParams(varargin)
     const.constraint.amax = deg2rad(4.5);
     const.constraint.phimax = 1.2;
 
-    const.aero.fMakeStaticallyStable = true; 
+    const.aero.fMakeStaticallyStable = false; 
     
     %% Pull out specific parameter if required
     nArgs = length(varargin);

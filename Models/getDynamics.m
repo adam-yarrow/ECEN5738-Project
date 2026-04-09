@@ -28,7 +28,7 @@ function [xDot] = getDynamics(x, u, const)
     zT = const.thrust.zOffset;
 
     % Get Dynamic Pressure
-    [rho, ~] = getAtmo(h);
+    [rho, ~] = getAtmo(h, const);
     qBar = 0.5.* rho .* V.^2; % Pa
 
     % Get External Forces
