@@ -1,4 +1,8 @@
-function u = calcCLFControl(x, x_r, xDot_r, P, const)
+function [u, exit] = calcCLFControl(x, x_r, xDot_r, P, const)
+
+
+    exit = 0;
+
     % Get the Lie Derivatives
     [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P, const);
     z = x(1:4) - x_r(1:4);
