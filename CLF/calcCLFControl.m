@@ -33,12 +33,13 @@ function [u, temp] = calcCLFControl(x, x_r, xDot_r, P, const)
 
     %% Solving by PMN Method
 
-    psi0 = LfV + epsilon * V;  % Eq. (12)
+    psi0 = LfV + epsilon * V;
     psi1 = LgV';   
-
-    if psi0 <= 0
-        u = zeros(3, 1);          
-    else
+    
+    % PMN Method defined by  Eq 12 of the paper
+    if psi0 > 0
         u = -((psi0 * psi1) / (psi1' * psi1));  
+    else
+        u = zeros(3, 1);          
     end
 end

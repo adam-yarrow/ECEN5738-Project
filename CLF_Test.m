@@ -10,7 +10,7 @@ ft_TO_m = 0.3048;
 V_r = V_r_ft * ft_TO_m;      % [m/s] Trim Velocity
 gamma_r = 0;                 % [rad] Flight Path Angle
 q_r = 0;                     % [rad/s] Pitch Rate
-theta_r = deg2rad(4);        % [rad] Pitch Angle
+theta_r = deg2rad(0);        % [rad] Pitch Angle
 h_r = h_r_ft * ft_TO_m;      % [m] Ref Altitude
 
 x_r = [V_r; gamma_r; q_r; theta_r; h_r];
@@ -20,7 +20,7 @@ xDot_r = zeros(5, 1);        % Static trim condition
 
 F = [0 0 0 0; 0 0 0 0; 0 0 0 0; 0 0 1 0];
 G = [1 0 0; 0 1 0; 0 0 1; 0 0 0];  
-Q_ARE = diag([0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5*(3.28^2)]); 
+Q_ARE = diag([0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5]); 
 R_ARE = diag([0.1, 81.6, 81.6]); 
 [P, ~, ~] = care(F, G, Q_ARE, R_ARE);
 
