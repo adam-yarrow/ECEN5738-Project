@@ -10,8 +10,36 @@ ft_TO_m = 0.3048;
 V_r = V_r_ft * ft_TO_m;      % [m/s] Trim Velocity
 gamma_r = 0;                 % [rad] Flight Path Angle
 q_r = 0;                     % [rad/s] Pitch Rate
-theta_r = deg2rad(4);        % [rad] Pitch Angle
+theta_r = 0;                 % [rad] Pitch Angle
 h_r = h_r_ft * ft_TO_m;      % [m] Ref Altitude
+
+%% Compute trim alpha from lift = weight (simplified, good first guess)
+const = ModelParams();
+const.thrust.fDisableEngine = false;
+
+V_r = 6815 * 0.3048;   % m/s
+h_r = 85000 * 0.3048;  % m
+
+% Get density at reference altitude
+[rho, ~] = getAtmo(h_r, const);
+qBar_r   = 0.5 * rho * V_r^2;
+
+% Lift = Weight at trim: qBar*S*(CL_alpha*alpha + CL_0) = m*g
+% Solve for alpha:
+m   = const.gravimetrics.m;
+g   = const.g;
+S   = const.aero.refArea;
+CL_alpha = const.aero.CL_alpha;
+CL_0     = const.aero.CL_0;
+
+% qBar*S*(CL_alpha*alpha + CL_0) = m*g
+% alpha = (m*g/(qBar*S) - CL_0) / CL_alpha
+alpha_trim = (m*g / (qBar_r * S) - CL_0) / CL_alpha;
+fprintf('Trim alpha estimate: %.3f deg\n', rad2deg(alpha_trim));
+
+% At trim: gamma=0, so theta = alpha
+x_r    = [V_r; 0; 0; alpha_trim; h_r];
+xDot_r = zeros(5, 1);
 
 x_r = [V_r; gamma_r; q_r; theta_r; h_r];
 xDot_r = zeros(5, 1);        % Static trim condition
