@@ -18,10 +18,12 @@ xDot_r = zeros(5, 1);        % Static trim condition
 
 %% Defining the Matrices for CLF
 
-F = [0 0 0 0; 0 0 0 0; 0 0 0 0; 0 0 1 0];
-G = [1 0 0; 0 1 0; 0 0 1; 0 0 0];  
+F = [0 0 0 0 0; 0 0 0 0 0; 0 0 0 0 0; 0 0 1 0 0; 0 V_r 0 0 0];
+G = [1 0 0; 0 1 0; 0 0 1; 0 0 0; 0 0 0];  
 Q_ARE = diag([0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5]); 
+Q_ARE = diag([0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5, 100])
 R_ARE = diag([0.1, 81.6, 81.6]); 
+R_ARE = diag([1, 81.6, 81.6])
 [P, ~, ~] = care(F, G, Q_ARE, R_ARE);
 
 %% Wrap CLF for the Simulation
@@ -33,7 +35,7 @@ V_ic_ft = V_r_ft - 400;      % [ft/s] Initial velocity -> 400 ft/s less than tri
 V_ic = V_ic_ft * ft_TO_m;    % [m/s]
 
 xIC = [V_ic; 0; 0; 0; h_r]; 
-tEnd = 50; 
+tEnd = 100; 
 
 %% Simulation
 
