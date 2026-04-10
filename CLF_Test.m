@@ -41,6 +41,21 @@ simData = Simulation(xIC, clf_wrapper, tEnd);
 
 %% Plotting
 
+figure();
+z = simData.x - x_r;
+V = NaN(numel(simData.times),1);
+for i = 1:numel(simData.times)
+    V(i) = z(:,i)'*P*z(:,i);
+end
+
+plot(simData.times, V);
+grid on;
+xlabel('Time (s)');
+ylabel('V(z)');
+title('Lyap Function vs Time V(z)');
+
+
+
 figure;
 
 % --- 1. Velocity ---
