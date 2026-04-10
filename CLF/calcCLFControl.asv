@@ -1,6 +1,10 @@
-function u = calcCLFControl(x, x_r, xDot_r, P)
+function [u, exit] = calcCLFControl(x, x_r, xDot_r, P, const)
+
+
+    exit = 0;
+
     % Get the Lie Derivatives
-    [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P);
+    [LfV, LgV] = calcCLFLieDerivs(x, x_r, xDot_r, P, const);
     z = x(1:4) - x_r(1:4);
     
     % Defining V and other params
@@ -19,7 +23,6 @@ function u = calcCLFControl(x, x_r, xDot_r, P)
     A = LgV; 
     b = -LfV - epsilon * V - unknown_term;
     
-    % Add bounds to your getCLFControl function
     lb = [0; -deg2rad(30); -deg2rad(30)]; % Minimums [phi, delta_e, delta_c]
     ub = [1.2; deg2rad(30); deg2rad(30)]; % Maximums
     
