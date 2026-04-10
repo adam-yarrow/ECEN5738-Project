@@ -15,7 +15,7 @@ function plotThrust()
 
     end
 
-    xlabel('Angle of Attack (radians)');
+    xlabel('Angle of Attack (deg)');
     ylabel('THrust accel (g)');
     title('Thrust vs Angle of Attack');
     legend();

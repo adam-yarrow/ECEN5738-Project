@@ -32,22 +32,30 @@ function [simData] = Simulation(xIC, fController, tEnd)
         u = zeros(3,1);
         for k=2:nTimes
             tkprev = simData.times(k-1);
-            tk = simData.times(k);
+            % tk = simData.times(k);
             [u,~] = fController(tkprev, xk, const);
             [~, xtraj] = ode45(@(t,x) getDynamics(x, u, const), ...
                                     [0,const.dT], xk);
-            disp(tk)
             xk = xtraj(end,:)';
             xResults(k,:) = xk';
         end
     end
     simData.x = xResults';   
 
-    %% Extract Control Actions
+    %% Extract Control Actions and other Useful Quantities
     simData.u = NaN(const.nInputs,nTimes);
+    simData.qBar = NaN(nTimes,1);
     for i = 1:nTimes
+        % Control Input
         [simData.u(:,i),~] = fController(simData.times(i), simData.x(:,i), const);
+
+        % Qbar
+        rho = getAtmo(simData.x(end,i), const);
+        simData.qBar(i) = 0.5*rho*simData.x(1,i)^2;
     end
+
+    %% Extract Dynamic Pressure
+
 end
 
 %% Helpers

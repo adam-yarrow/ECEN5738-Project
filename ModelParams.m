@@ -24,9 +24,9 @@ function [const] = ModelParams(varargin)
     const.g = 9.81; % m/s^2
 
     const.atmo.fUseSimpleAtmo = true;
-    const.atmo.h0 = 8.5E4 *FEET_TO_M; 
+    const.atmo.h0 = 8.5E4 * FEET_TO_M; 
     const.atmo.rho0 = 6.7429E-5 * SLUGS_PerFt3_To_Kg_perM3; 
-    const.atmo.hs = 2.1358*FEET_TO_M; 
+    const.atmo.hs = 2.1358E4 * FEET_TO_M; 
 
     %{
         NOTE: using "Control Orientated Modelling of an Air-Breathing
@@ -56,7 +56,6 @@ function [const] = ModelParams(varargin)
     beta(6) = -2.4216e3;  % lb·ft^-1·rad^-1
     beta(7) =  6.3785e3;  % lb·ft^-1
     beta(8) = -1.0090e2;  % lb·ft^-1
-    % TODO - does this need to be converted to N not kg?
     const.thrust.beta = beta*(LB_TO_KG/FEET_TO_M) * vehicleLength * const.g; 
     const.thrust.fDisableEngine = false; 
 

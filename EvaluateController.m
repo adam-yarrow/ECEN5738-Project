@@ -15,3 +15,9 @@ plotSimulationResults(simData_CBF,'CBF Controller');
 
 simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
 plotSimulationResults(simData_OL,'OL Controller');
+
+% PID
+simData_PID = Simulation(xIC_Regulation, @PID,tEnd);
+plotSimulationResults(simData_PID,'PID on Pitch Rate Controller');
+
+
