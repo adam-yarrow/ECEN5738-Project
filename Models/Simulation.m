@@ -45,10 +45,12 @@ function [simData] = Simulation(xIC, fController, tEnd)
 
     %% Extract Control Actions and other Useful Quantities
     simData.u = NaN(const.nInputs,nTimes);
+    simData.slackVar = NaN(nTimes,1);
     simData.qBar = NaN(nTimes,1);
     for i = 1:nTimes
         % Control Input
-        [simData.u(:,i),~] = fController(simData.times(i), simData.x(:,i), const);
+        [simData.u(:,i),simData.slackVar(i)] = fController(simData.times(i), ...
+            simData.x(:,i), const);
 
         % Qbar
         rho = getAtmo(simData.x(end,i), const);

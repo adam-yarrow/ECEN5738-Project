@@ -15,5 +15,6 @@ function [xr, xrDot] = getRefTraj(t)
     h_r = h_r_ft * ft_TO_m;      % [m] Ref Altitude
     
     xr = [V_r; gamma_r; q_r; theta_r; h_r];
-    xrDot = zeros(5, 1);        % Static trim condition    
+    xr = repmat(xr, 1, length(t));
+    xrDot = zeros(5, length(t));        % Static trim condition    
 end

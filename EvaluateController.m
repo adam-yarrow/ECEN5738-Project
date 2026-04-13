@@ -3,10 +3,10 @@
 %}
 
 %% Testing KKT CLF-CBF
-tEnd = 50;
+tEnd = 100;
 
 xIC = getRefTraj(0);
-xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity
+% xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity (400ft/s less)
 
 % TODO - move Q and R to constants once decided on approach
 Q_ARE = diag([0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5]); 
@@ -19,7 +19,7 @@ fCBFactive = true;
 clfCbfKKT = @(t,x,const) CoupledCLF_CBF(t,x,const,@getRefTraj,P,fCBFactive);
 
 simData_KKT = Simulation(xIC, clfCbfKKT, tEnd);
-plotSimulationResults(simData_KKT, 'KKT Controller');
+plotSimulationResults(simData_KKT, 'KKT Controller',@getRefTraj);
 
 
 %% No Control - Testing Open Loop Response

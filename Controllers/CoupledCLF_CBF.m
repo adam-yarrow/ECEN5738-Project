@@ -34,7 +34,7 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     %% Define KKT terms
     % CLF Terms w/o CBF
     y1 = [LgV -1]'; % -1 is for the relaxation term
-    p1 = -LfV - eps*V - modelMismatchTerm;
+    p1 = 2*(-LfV - eps*V - modelMismatchTerm); % Scale factor of 2 due to lyapunov deriv
     y2 = zeros(4,1);
     p2 = 0;
 
@@ -42,7 +42,7 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     if fCBFactive  
         Gamma = getGammaH(x,const); % Kappa function constraint on h
         y2 = [-Lgh; 0];
-        p2 = Lfh + Gamma;
+        p2 = 2*(Lfh + Gamma); %% TODO - check if scale factor of 2 is appropriate here and on p1?
     else
 
         error('Need to better formulate the problem for CBF off')
@@ -54,7 +54,7 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     [lambda1, lambda2] = solveLambdaKKT(G, p1, p2);
     
     % Extract Optimal u
-    uStar = -lambda1 * y1 - lambda2 * y2;
+    uStar = -lambda1/2 * y1 - lambda2/2 * y2;
     u = uStar(1:3);
     delta = uStar(4);
 end

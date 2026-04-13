@@ -1,24 +1,44 @@
-function plotSimulationResults(simData,simName)
+function plotSimulationResults(simData,simName, refTrajFunc)
 %{
     Plots the simulation response.
 %}
 
 const = ModelParams();
 
+if nargin < 3
+    refTrajFunc = [];
+end
+
+%% Ref Traj
+if ~isempty(refTrajFunc)
+    xr = refTrajFunc(simData.times);    
+else
+    xr = [];
+end
+
+
 %% States
 % TODO add regulation plots
 figure('Name',sprintf('%s - states',simName));
 hStates = [];
 for iState = 1:const.nStates
+    if ~isempty(xr)
+        xrCurrent = xr(iState,:);
+    else
+        xrCurrent = [];
+    end
+
     hStates(end+1) = subplot(2,3,iState);
+    hold on;
     plotState(simData.times, simData.x(iState,:), ...
         const.stateNames{iState}, const.statePlottingUnits{iState},...
-        const.statePlottingSF(iState));
+        const.statePlottingSF(iState), xrCurrent);
+    legend();
 end
 
 % Alpha
 hStates(end+1) = subplot(2,3,6);
-plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1));
+plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1),[]);
 
 linkaxes(hStates,'x');
 sgtitle(sprintf('States vs Time - %s', simName))
@@ -27,11 +47,15 @@ sgtitle(sprintf('States vs Time - %s', simName))
 %% Control Inputs
 figure('Name',sprintf('%s - control inputs',simName));
 hInputs = [];
-for iInput = 1:const.nInputs
-    hInputs(end+1) = subplot(1,const.nInputs,iInput);
+for iInput = 1:const.nInputs 
+    hInputs(end+1) = subplot(2,2,iInput);
+    hold on;
     plotState(simData.times, simData.u(iInput,:), const.inputNames{iInput},...
-                const.inputPlottingUnits{iInput}, const.inputPlottingSF(iInput));
+                const.inputPlottingUnits{iInput}, const.inputPlottingSF(iInput),[]);
 end
+hInputs(end+1) = subplot(2,2,4);
+plotState(simData.times, simData.slackVar(:), 'Slack Variable','-', 1, []);
+
 linkaxes(hInputs,'x');
 sgtitle(sprintf('Inputs vs Time - %s',simName));
 
@@ -47,9 +71,15 @@ title(sprintf('Qbar vs Time - %s',simName))
 
 end
 
-function plotState(t,data,stateName,stateUnits,SF)
-    plot(t,data*SF);
+function plotState(t,data,stateName,stateUnits,SF, xr)
+    plot(t,data*SF,'k','DisplayName','Trajectory');
+
+    if ~isempty(xr)
+        plot(t, xr*SF,'r--','DisplayName','Reference Trajectory');
+    end
+
     xlabel('Time (s)');
     ylabel(sprintf('%s (%s)', stateName, stateUnits));
     grid on;    
+
 end
