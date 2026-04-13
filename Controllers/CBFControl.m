@@ -4,10 +4,7 @@ function [u,exit] = CBFControl(t, x, const)
     Lfh = getLfh(x, const);
     Lgh = getLgh(x, const);
 
-    alpha = calcAlpha(x);
-    k = 1;
-    h = c.amax^2 - alpha^2;
-    Gamma = k*h;
+    Gamma = getGammaH(x,const);
 
     % Minimize u'Hu + f'u
     H = [eye(3)];

@@ -87,13 +87,18 @@ function [const] = ModelParams(varargin)
     const.aero.CM_deltaE = -1.2897; % rad^-1
     const.aero.CM_deltaC = kec * const.aero.CM_deltaE;
 
+    const.aero.fMakeStaticallyStable = false; 
+
+    %% CBF Params
     const.constraint.amax = deg2rad(4.5);
     const.constraint.phiBounds = [0, 1.2];
     const.constraint.deltaEBounds = [-deg2rad(30), deg2rad(30)];
     const.constraint.deltaCBounds = [-deg2rad(30), deg2rad(30)];
 
-    const.aero.fMakeStaticallyStable = false; 
-    
+    %% Controller Params
+    const.clf.eps = 0.01; % From Eq. 31
+    const.clf.errorStateIdx = 1:4; % ignoring height state for z
+  
     %% Pull out specific parameter if required
     nArgs = length(varargin);
     if nArgs > 0
