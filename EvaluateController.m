@@ -3,9 +3,10 @@
 %}
 
 %% Testing KKT CLF-CBF
-tEnd = 100;
+tEnd = 10;
 
 xIC = getRefTraj(0);
+xIC(4) = deg2rad(4.5);
 % xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity (400ft/s less)
 
 % TODO - move Q and R to constants once decided on approach
@@ -15,11 +16,15 @@ P = getLyapP(Q_ARE, R_ARE);
 
 fCBFactive = true;
 
+%% TODO - could potentially reduce the dimensionality of the error states (z)
+% by zeroing out terms in the constrained controller and then use a psuedo
+% inverse so that can track particular components only????
+
 % Annonymous Control func
 clfCbfKKT = @(t,x,const) CoupledCLF_CBF(t,x,const,@getRefTraj,P,fCBFactive);
 
 simData_KKT = Simulation(xIC, clfCbfKKT, tEnd);
-plotSimulationResults(simData_KKT, 'KKT Controller',@getRefTraj);
+plotSimulationResults(simData_KKT, 'KKT Controller - CBF ON',@getRefTraj);
 
 
 %% No Control - Testing Open Loop Response

@@ -36,31 +36,48 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     y1 = [LgV -1]'; % -1 is for the relaxation term
     p1 = 2*(-LfV - eps*V - modelMismatchTerm); % Scale factor of 2 due to lyapunov deriv
     y2 = zeros(4,1);
-    p2 = 0;
 
     % Add CBF constraints
     if fCBFactive  
         Gamma = getGammaH(x,const); % Kappa function constraint on h
         y2 = [-Lgh; 0];
-        p2 = 2*(Lfh + Gamma); %% TODO - check if scale factor of 2 is appropriate here and on p1?
+        p2 = 2*(Lfh + Gamma);
+
+        % KKT Solution
+        G = getG(y1,y2);
+        [lambda1, lambda2] = solveLambdaKKT(G, p1, p2);
+        
     else
-
-        error('Need to better formulate the problem for CBF off')
-        %% NOTE: Get a singlularity here with G inv
-    end
-
-    %% KKT Solutions
-    G = getG(y1,y2);
-    [lambda1, lambda2] = solveLambdaKKT(G, p1, p2);
+        lambda2 = 0; % CBF
+        lambda1 = omegaFunc(-p1)/(y1'*y1);
+    end    
     
     % Extract Optimal u
     uStar = -lambda1/2 * y1 - lambda2/2 * y2;
     u = uStar(1:3);
     delta = uStar(4);
+
+
+    % Adding Control Saturation
+    if abs(u(2)) > deg2rad(30)
+        u(2) = deg2rad(30)*sign(u(2));
+    end
+
+    if abs(u(3)) > deg2rad(30)
+        u(3) = deg2rad(30)*sign(u(3));
+    end
+
+    if (u(1) > 1.2)
+        u(1) = 1.2;
+    elseif (u(1) < 0)
+        u(1) = 0;
+    end
+
 end
 
 %% Supporting Function
 function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
+    gCondNum = rcond(G);
     if -G(1,2)*omegaFunc(-p2) - G(2,2)*p1 < 0
         % lambda1 = 0 (only CBF active)
         lambda1 = 0;
