@@ -13,4 +13,7 @@ function [P] = getLyapP(Q_ARE, R_ARE, Vref, const)
     F = F(const.clf.errorStateIdx, const.clf.errorStateIdx);
     G = G(const.clf.errorStateIdx, :);
     [P, ~, ~] = care(F, G, Q_ARE, R_ARE);
+
+    %% Cleanup P (remove small numbers)
+    P(abs(P) < 1E-10) = 0;
 end

@@ -4,12 +4,13 @@
 const = ModelParams();
 
 %% Testing KKT CLF-CBF
-tEnd = 20;
+tEnd = 80;
 
 % IC
 xIC = getRefTraj(0);
 Vref = xIC(1);
-% xIC(4) = deg2rad(4.5);
+% xIC(4) = deg2rad(5);
+xIC(5) = xIC(5) - 300;
 xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity (400ft/s less)
 
 % Tuning
@@ -24,23 +25,23 @@ simData_KKT = Simulation(xIC, clfCbfKKT, tEnd);
 plotSimulationResults(simData_KKT, 'KKT Controller - CBF ON',@getRefTraj, P);
 
 
-%% No Control - Testing Open Loop Response
-xIC_Regulation = [2077;
-                  0;
-                  0;
-                  0;
-                  25908];
-tEnd = 10;
-
-simData_CBF = Simulation(xIC_Regulation, @CBFControl,tEnd);
-plotSimulationResults(simData_CBF,'CBF Controller');
-
-simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
-plotSimulationResults(simData_OL,'OL Controller');
-
-% PID
-simData_PID = Simulation(xIC_Regulation, @PID,tEnd);
-plotSimulationResults(simData_PID,'PID on Pitch Rate Controller');
+% %% No Control - Testing Open Loop Response
+% xIC_Regulation = [2077;
+%                   0;
+%                   0;
+%                   0;
+%                   25908];
+% tEnd = 10;
+% 
+% simData_CBF = Simulation(xIC_Regulation, @CBFControl,tEnd);
+% plotSimulationResults(simData_CBF,'CBF Controller');
+% 
+% simData_OL = Simulation(xIC_Regulation, @OpenLoopControl,tEnd);
+% plotSimulationResults(simData_OL,'OL Controller');
+% 
+% % PID
+% simData_PID = Simulation(xIC_Regulation, @PID,tEnd);
+% plotSimulationResults(simData_PID,'PID on Pitch Rate Controller');
 
 
 

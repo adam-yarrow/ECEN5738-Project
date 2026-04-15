@@ -15,7 +15,7 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 
     [xr, xrDot] = refTrajFunc(t);
     xrDot = xrDot(zStatesIdx);
-    P = P(zStatesIdx, zStatesIdx);
+    % P = P(zStatesIdx, zStatesIdx);
   
     z = x(zStatesIdx) - xr(zStatesIdx);
     [LfV, LgV] = calcCLFLieDerivs(x, z, xrDot, P,  const);
