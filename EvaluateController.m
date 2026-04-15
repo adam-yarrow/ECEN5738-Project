@@ -4,13 +4,13 @@
 const = ModelParams();
 
 %% Testing KKT CLF-CBF
-tEnd = 1;
+tEnd = 20;
 
 % IC
 xIC = getRefTraj(0);
 Vref = xIC(1);
 % xIC(4) = deg2rad(4.5);
-% xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity (400ft/s less)
+xIC(1) = xIC(1) - 121.92; % Slight perturbation on velocity (400ft/s less)
 
 % Tuning
 [Q_ARE, R_ARE] = buildQR_ARE(const); 

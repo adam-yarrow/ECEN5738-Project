@@ -101,11 +101,14 @@ function [const] = ModelParams(varargin)
     % CLF Tuning
     % thetaWeight = 1E-3;
     % equalWeight = (1 - thetaWeight) / 4; % assuming weight V, q, gamma and height equally
-    const.clf.stateWeights = [equalWeight, equalWeight, equalWeight, thetaWeight, equalWeight];
+    % const.clf.stateWeights = [0.17, 0.5, 0.27, 0.06, 0.01]; % ORIGINAL-ish TUNE
+    const.clf.stateWeights = [0.17, 0.5, 0.27, 0.06, 0.2];
     const.clf.stateMaxes = [2200, pi/2, deg2rad(100), pi/2, 29000]; % [m/s, rad, rad/s, rad, m]
-    const.clf.controlWeights = [0.0386, 0.4807, 0.4807]; % TODO - why is phi so low????
+    % const.clf.controlWeights = [0.0386, 0.4807, 0.4807]; % ORIGINAL TUNE
+    const.clf.controlWeights = [0.0386, 0.48, 0.48];
     const.clf.controlMaxes = [max(const.constraint.phiBounds), max(const.constraint.deltaEBounds), max(const.constraint.deltaEBounds)];
-    const.clf.QR_RelWeight = 4.7E-4; % Scale factor applied to raw R (estimated from extractRelativeWeights())
+    const.clf.Qgain = 20936; % Scale factor applied to raw Q (estimated from extractRelativeWeights())
+    const.clf.Rgain = 9.8391;
 
     %% Pull out specific parameter if required
     nArgs = length(varargin);
