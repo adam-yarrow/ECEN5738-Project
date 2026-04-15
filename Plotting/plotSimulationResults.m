@@ -1,4 +1,4 @@
-function plotSimulationResults(simData,simName, refTrajFunc)
+function plotSimulationResults(simData,simName, refTrajFunc, P)
 %{
     Plots the simulation response.
 %}
@@ -7,6 +7,7 @@ const = ModelParams();
 
 if nargin < 3
     refTrajFunc = [];
+    P = [];
 end
 
 %% Ref Traj
@@ -15,6 +16,8 @@ if ~isempty(refTrajFunc)
 else
     xr = [];
 end
+
+nTimes = length(simData.times);
 
 
 %% States
@@ -43,6 +46,22 @@ plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1),[]);
 linkaxes(hStates,'x');
 sgtitle(sprintf('States vs Time - %s', simName))
 
+%% Lyapunov Function
+if ~isempty(P)
+    zStateIdx = const.clf.errorStateIdx;
+    z = simData.x(zStateIdx,:) - xr(zStateIdx,:);
+    V = NaN(nTimes,1);
+    for iTime = 1:numel(simData.times)
+        V(iTime) = z(:,iTime)'*P(zStateIdx,zStateIdx)*z(:,iTime);
+    end
+
+    figure('Name',sprintf('%s - Lyapunov Function',simName));
+    plot(simData.times, V);
+    xlabel('Time (s)');
+    ylabel('V(x(t))');
+    grid on;
+    title(sprintf('V vs Time - %s', simName));    
+end
 
 %% Control Inputs
 figure('Name',sprintf('%s - control inputs',simName));

@@ -97,8 +97,16 @@ function [const] = ModelParams(varargin)
 
     %% Controller Params
     const.clf.eps = 0.01; % From Eq. 31
-    const.clf.errorStateIdx = 1:4; % ignoring height state for z
-  
+    const.clf.errorStateIdx = 1:5; % including height state (5) at the moment
+    % CLF Tuning
+    % thetaWeight = 1E-3;
+    % equalWeight = (1 - thetaWeight) / 4; % assuming weight V, q, gamma and height equally
+    const.clf.stateWeights = [equalWeight, equalWeight, equalWeight, thetaWeight, equalWeight];
+    const.clf.stateMaxes = [2200, pi/2, deg2rad(100), pi/2, 29000]; % [m/s, rad, rad/s, rad, m]
+    const.clf.controlWeights = [0.0386, 0.4807, 0.4807]; % TODO - why is phi so low????
+    const.clf.controlMaxes = [max(const.constraint.phiBounds), max(const.constraint.deltaEBounds), max(const.constraint.deltaEBounds)];
+    const.clf.QR_RelWeight = 4.7E-4; % Scale factor applied to raw R (estimated from extractRelativeWeights())
+
     %% Pull out specific parameter if required
     nArgs = length(varargin);
     if nArgs > 0
