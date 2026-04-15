@@ -70,19 +70,22 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     delta = uStar(4);
 
     %% Control Saturation
-    if abs(u(2)) > deg2rad(30)
-        u(2) = deg2rad(30)*sign(u(2));
-    end
 
-    if abs(u(3)) > deg2rad(30)
-        u(3) = deg2rad(30)*sign(u(3));
-    end
+    %% TODO - fin saturation was causing issues
 
-    if (u(1) > 1.2)
-        u(1) = 1.2;
-    elseif (u(1) < 0)
-        u(1) = 0;
-    end
+    % if abs(u(2)) > deg2rad(30)
+    %     u(2) = deg2rad(30)*sign(u(2));
+    % end
+    % 
+    % if abs(u(3)) > deg2rad(30)
+    %     u(3) = deg2rad(30)*sign(u(3));
+    % end
+    % 
+    % if (u(1) > 1.2)
+    %     u(1) = 1.2;
+    % elseif (u(1) < 0)
+    %     u(1) = 0;
+    % end
 
 end
 
@@ -99,7 +102,8 @@ function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
         lambda2 = 0;   
     else
         % Both active
-        lambda = pinv(G)*[p1;p2]; % Solve linear system
+        lambda = [omegaFunc(G(1,2)*p2 - G(2,2)*p1);
+                  omegaFunc(G(2,1)*p1 - G(1,1)*p2)] ./ det(G); % Solve linear system
         lambda1 = lambda(1);
         lambda2 = lambda(2);
     end
