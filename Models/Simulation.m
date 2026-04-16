@@ -24,9 +24,12 @@ function [simData] = Simulation(xIC, fController, tEnd)
     %% Run Sim
     xResults = zeros(nTimes, const.nStates);
     if const.continuous == true
-        options = odeset('OutputFcn',@ode45OutputFunc);
-        [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController, const), ...
-                                simData.times, xIC, options);
+        options = odeset('OutputFcn',@ode45OutputFunc,'AbsTol',1E-10);
+        % [~, xResults] = ode45(@(t,x) plantDynCL(t,x,fController, const), ...
+        %                         simData.times, xIC, options);
+
+        [~, xResults] = RK4(@(t,x) plantDynCL(t,x,fController, const),...
+                            [simData.times(1), simData.times(end)], xIC, const.dT);
     else
         xResults(1,:) = xIC';
         xk = xIC;
