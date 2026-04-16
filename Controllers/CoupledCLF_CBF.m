@@ -34,7 +34,7 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 
     %% Define KKT terms
     % CLF Terms w/o CBF
-    y1 = [LgV; -1]'; % -1 is for the relaxation term
+    y1 = [LgV -1]'; % -1 is for the relaxation term
     p1 = (-LfV - eps*V - modelMismatchTerm);
     
     % Add CBF constraints
@@ -73,19 +73,19 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 
     %% TODO - fin saturation was causing issues
 
-    % if abs(u(2)) > deg2rad(30)
-    %     u(2) = deg2rad(30)*sign(u(2));
-    % end
-    % 
-    % if abs(u(3)) > deg2rad(30)
-    %     u(3) = deg2rad(30)*sign(u(3));
-    % end
-    % 
-    % if (u(1) > 1.2)
-    %     u(1) = 1.2;
-    % elseif (u(1) < 0)
-    %     u(1) = 0;
-    % end
+    if abs(u(2)) > deg2rad(30)
+        u(2) = deg2rad(30)*sign(u(2));
+    end
+
+    if abs(u(3)) > deg2rad(30)
+        u(3) = deg2rad(30)*sign(u(3));
+    end
+
+    if (u(1) > 1.2)
+        u(1) = 1.2;
+    elseif (u(1) < 0)
+        u(1) = 0;
+    end
 
 end
 
@@ -111,7 +111,7 @@ end
 
 function G = getG(y1,y2)
     slack_penalty = 1e6;
-    Hinv = [1 0; 0 1/slack_penalty];
+    Hinv = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1/slack_penalty];
     G11 = y1'*Hinv*y1;
     G12 = y1'*Hinv*y2;
     G21 = y2'*Hinv*y1;
