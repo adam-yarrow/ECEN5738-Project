@@ -90,7 +90,7 @@ function [const] = ModelParams(varargin)
     const.aero.fMakeStaticallyStable = false; 
 
     %% CBF Params
-    const.constraint.amax = deg2rad(4.5);
+    const.constraint.amax = deg2rad(1.5);
     const.constraint.phiBounds = [0, 1.2];
     const.constraint.deltaEBounds = [-deg2rad(30), deg2rad(30)];
     const.constraint.deltaCBounds = [-deg2rad(30), deg2rad(30)];

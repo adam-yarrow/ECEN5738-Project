@@ -110,7 +110,7 @@ function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
 end
 
 function G = getG(y1,y2)
-    slack_penalty = 1e6;
+    slack_penalty = 1e12; 1e6;
     Hinv = [1 0 0 0; 0 1 0 0; 0 0 1 0; 0 0 0 1/slack_penalty];
     G11 = y1'*Hinv*y1;
     G12 = y1'*Hinv*y2;
