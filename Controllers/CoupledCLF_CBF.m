@@ -30,11 +30,11 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 
     %% TODO: Add abs(2*z'*P*G*l2*W)
     %% NEED TO WORK OUT WHAT W and L2 correspond to
-    modelMismatchTerm = 0; 
+    modelMismatchTerm = getModelMismatchTerm(const, x, z, P);
 
     %% Define KKT terms
     % CLF Terms w/o CBF
-    y1 = [LgV -1]'; % -1 is for the relaxation term
+    y1 = [LgV; -1]'; % -1 is for the relaxation term
     p1 = (-LfV - eps*V - modelMismatchTerm);
     
     % Add CBF constraints
@@ -95,7 +95,7 @@ function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
     if -G(1,2)*omegaFunc(-p2) - G(2,2)*p1 < 0
         % lambda1 = 0 (only CBF active)
         lambda1 = 0;
-        lambda2 = omegaFunc(-p1)/G(2,2);
+        lambda2 = omegaFunc(-p2)/G(2,2);
     elseif -G(2,1)*omegaFunc(-p1) - G(1,1)*p2 < 0
         % lambda2 = 0 (only CLF active)
         lambda1 = omegaFunc(-p1)/G(1,1);
@@ -110,10 +110,12 @@ function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
 end
 
 function G = getG(y1,y2)
-    G11 = y1'*y1;
-    G12 = y1'*y2;
-    G21 = y2'*y1;
-    G22 = y2'*y2;
+    slack_penalty = 1e6;
+    Hinv = [1 0; 0 1/slack_penalty];
+    G11 = y1'*Hinv*y1;
+    G12 = y1'*Hinv*y2;
+    G21 = y2'*Hinv*y1;
+    G22 = y2'*Hinv*y2;
     G = [G11 G12; G21 G22];
 end
 

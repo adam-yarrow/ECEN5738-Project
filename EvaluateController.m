@@ -4,7 +4,7 @@
 const = ModelParams();
 
 %% Testing KKT CLF-CBF
-tEnd = 80;
+tEnd = 30;
 
 % IC
 xIC = getRefTraj(0);

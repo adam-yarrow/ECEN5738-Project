@@ -1,6 +1,6 @@
 %% Finding the actual Normalized Relative Weights from Papers Q and R matrices
 % inverting Bryson's rule making some assumptions around state maxes
-Q_ARE = [0.25*(3.28^2), 4.44e7, 1.11e7, 4.44e5]; 
+Q_ARE = [5.0*(3.28^2), 4.44e7, 1.11e7, 4.44e5]; 
 R_ARE = [0.1, 81.6, 81.6]; 
 
 Vmax = 2200; % m/s (based on rough trim condition
