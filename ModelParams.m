@@ -6,7 +6,7 @@ function [const] = ModelParams(varargin)
 
     const = struct();
 
-    const.dT = 1E-2; % TODO - decide on this???
+    const.dT = 1E-3; % TODO - decide on this???
     const.continuous = true;
     
     const.nStates = 5;
@@ -90,13 +90,13 @@ function [const] = ModelParams(varargin)
     const.aero.fMakeStaticallyStable = false; 
 
     %% CBF Params
-    const.constraint.amax = deg2rad(1.5);
+    const.constraint.amax = deg2rad(4.5);
     const.constraint.phiBounds = [0, 1.2];
     const.constraint.deltaEBounds = [-deg2rad(30), deg2rad(30)];
     const.constraint.deltaCBounds = [-deg2rad(30), deg2rad(30)];
 
     %% Controller Params
-    const.clf.eps = 0.01; % From Eq. 31
+    const.clf.eps = 1E-3; 0.01; % From Eq. 31
     const.clf.errorStateIdx = 1:5; % including height state (5) at the moment
     % CLF Tuning
     % thetaWeight = 1E-3;
@@ -106,10 +106,17 @@ function [const] = ModelParams(varargin)
     % const.clf.stateMaxes = [2200, pi/2, deg2rad(100), pi/2, 4000]; % [m/s, rad, rad/s, rad, m]
     const.clf.stateMaxes = [2200, pi/2, deg2rad(10), pi/2, 25000];
     % const.clf.controlWeights = [0.0386, 0.4807, 0.4807]; % ORIGINAL TUNE
-    const.clf.controlWeights = [0.0386, 0.48, 0.48];
+    const.clf.controlWeights = [0.0386*0.5, 0.48, 0.48];
     const.clf.controlMaxes = [max(const.constraint.phiBounds), max(const.constraint.deltaEBounds), max(const.constraint.deltaEBounds)];
     const.clf.Qgain = 20000; % Scale factor applied to raw Q (estimated from extractRelativeWeights())
     const.clf.Rgain = 1;
+
+    const.clf.slackPenalty = 1e4;
+    const.clf.controlPenalty = [1;1;1];
+
+    const.clf.qTau = 1/60;
+    const.clf.actTau = 1/20;
+
 
     %% Pull out specific parameter if required
     nArgs = length(varargin);

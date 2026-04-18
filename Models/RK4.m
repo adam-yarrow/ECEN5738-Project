@@ -10,11 +10,6 @@ function [t, y] = RK4(f, tspan, y0, h)
 % OUTPUTS:
 %   t - time vector
 %   y - solution matrix (each row is the state at time t(i))
-%
-% EXAMPLE (simple harmonic oscillator):
-%   f = @(t, y) [y(2); -y(1)];
-%   [t, y] = rk4(f, [0, 10], [1; 0], 0.01);
-%   plot(t, y(:,1));
 
     t = (tspan(1):h:tspan(2))';
     n = length(t);

@@ -1,5 +1,10 @@
 function [Z] = getModelMismatchTerm(const, x, z, P)
-    G = [1 0 0; 0 1 0; 0 0 1; 0 0 0; 0 0 0];
+    G = [1 0 0; 
+        0 1 0; 
+        0 0 1; 
+        0 0 0; 
+        0 0 0];
+    G = G(const.clf.errorStateIdx,:);
     W_deltaE = const.aero.CD_deltaESq * const.constraint.deltaEBounds(1)^2;
     W_deltaC = const.aero.CD_deltaCSq * const.constraint.deltaCBounds(1)^2;
     W = [W_deltaE; W_deltaC];

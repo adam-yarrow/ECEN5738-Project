@@ -88,6 +88,39 @@ plotState(simData.times, calcAlpha(simData.x), 'Alpha', 'deg', rad2deg(1),[]);
 linkaxes(hStates,'x');
 sgtitle(sprintf('States vs Time - %s', simName))
 
+
+%% Debugging
+figure();
+ax = [];
+ax(1) = subplot(4, 1, 1);
+plot(simData.times, simData.debug.G11);
+ylabel('G11')
+grid on;
+
+ax(2) =subplot(4, 1, 2);
+plot(simData.times, simData.debug.p1);
+ylabel('p1')
+grid on;
+
+ax(3) = subplot(4, 1, 3);
+plot(simData.times, simData.debug.modelMismatchTerm);
+ylabel('model mismatch term')
+grid on;
+
+ax(4) = subplot(4, 1, 4);
+hold on;
+plot(simData.times, simData.debug.y1(1,:));
+plot(simData.times, simData.debug.y1(2,:));
+plot(simData.times, simData.debug.y1(3,:));
+plot(simData.times, simData.debug.y1(4,:));
+legend('phi','deltaE','deltaC','slack')
+ylabel('y1 terms')
+grid on;
+
+linkaxes(ax,'x');
+
+
+
 end
 
 function plotState(t,data,stateName,stateUnits,SF, xr)
