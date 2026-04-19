@@ -20,10 +20,13 @@ P = getLyapP(Q_ARE, R_ARE, Vref, const);
 % Annonymous Control func
 fCBFactive = true;
 clfCbfKKT = @(t,x,const) CoupledCLF_CBF(t,x,const,@getRefTraj,P,fCBFactive);
-profile on;
-simData_KKT = Simulation(xIC, clfCbfKKT, tEnd);
-profile viewer
-plotSimulationResults(simData_KKT, 'KKT Controller - CBF ON',@getRefTraj, P);
+simData_CBFon = Simulation(xIC, clfCbfKKT, tEnd);
+
+fCBFactive = false;
+clfCbfKKT = @(t,x,const) CoupledCLF_CBF(t,x,const,@getRefTraj,P,fCBFactive);
+simData_CBFoff = Simulation(xIC, clfCbfKKT, tEnd);
+
+plotSimulationResults({simData_CBFon, simData_CBFoff}, {'CBF ON','CBF OFF'},@getRefTraj, P);
 
 
 % %% No Control - Testing Open Loop Response
