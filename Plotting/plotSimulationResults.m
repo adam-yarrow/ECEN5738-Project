@@ -40,12 +40,12 @@ end
 
 
 %% Dynamic pressure
-figure('Name',sprintf('%s - Dynamic Pressure',simName));
-plot(simData.times, simData.qBar/1000);
-xlabel('Time (s)');
-ylabel('Dynamic Pressure (kPa)');
-grid on;
-title(sprintf('Qbar vs Time - %s',simName))
+% figure('Name',sprintf('%s - Dynamic Pressure',simName));
+% plot(simData.times, simData.qBar/1000);
+% xlabel('Time (s)');
+% ylabel('Dynamic Pressure (kPa)');
+% grid on;
+% title(sprintf('Qbar vs Time - %s',simName))
 
 %% Control Inputs
 figure('Name',sprintf('%s - control inputs',simName));

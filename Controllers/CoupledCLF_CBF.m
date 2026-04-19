@@ -10,6 +10,19 @@ function [u, delta, mode, G11, p1, modelMismatchTerm, y1] = CoupledCLF_CBF(t, x,
         P needs to match the size of the number of active controller error
         states in ModelParams.
     %}
+    persistent uPrevious
+    % persistent tPrev;
+
+    nPoints = 1;
+
+    if isempty(uPrevious)
+        uPrevious = zeros(3,nPoints);
+        % tPrev = 0;
+    end
+    
+
+    
+
     %% Get Terms
     x = x([1,2,3,4,5]);
     zStatesIdx = const.clf.errorStateIdx;
@@ -63,18 +76,51 @@ function [u, delta, mode, G11, p1, modelMismatchTerm, y1] = CoupledCLF_CBF(t, x,
     u = uStar(1:3);
     delta = uStar(4);
 
+    Vthreshold = 50;
+    if V < Vthreshold
+        SF = (Vthreshold - V)/Vthreshold;
+        uPID = PID(t,x,const);
+        u(2) = uPID(2)*SF + u(2)*(1-SF);
+        u(3) = uPID(3)*SF + u(3)*(1-SF);
+    end
+
+    if V < 5 || norm(u) == 0
+        u = uPrevious;    
+    end
+
+    uPrevious = u;
+
+    %% Weighted LPF (essentially)
+    %% Could do a windowed moving average here?
+    % if (V < 30)% && (t >= (tPrev + const.dT))
+    %     % u = 0.1*u + 0.9*previousU;
+    %     k = 3;
+    %     SF = exp(-k*abs((u - previousU)./previousU));
+    %     u = SF.*u + (1-SF).*previousU;
+    % 
+    %     %% TODO could do weightings based on difference between the two
+    %     % window = chebwin(nPoints+1);
+    %     % u = mean([u,previousU], 2);
+    %     % u = [u,previousU]*window/sum(window);
+    % 
+    %     tPrev = t;
+    % end
+
+    % previousU = [u, previousU(:,1:end-1)];
+    % previousU = u;
+
     %% Control Saturation
-    u = saturateControl(u);
+    u = saturateControl(u,const);
 
 end
 
-function u = saturateControl(u)
+function u = saturateControl(u,const)
     if abs(u(2)) > deg2rad(30)
-        u(2) = deg2rad(30)*sign(u(2));
+        u(2) =  const.constraint.deltaEBounds(2)*sign(u(2));
     end
 
     if abs(u(3)) > deg2rad(30)
-        u(3) = deg2rad(30)*sign(u(3));
+        u(3) = const.constraint.deltaCBounds(2)*sign(u(3));
     end
 
     if (u(1) > 1.2)

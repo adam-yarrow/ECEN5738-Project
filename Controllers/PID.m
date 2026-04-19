@@ -1,8 +1,8 @@
 function [u, exit] = PID(t, x, const)
     % Try to control q to zero
     % Full throttle baby!
-    Kp = 10;
-    Ki = 100; % just a guess lol
+    Kp = 5; 10;
+    Ki = 10; 100; % just a guess lol
 
     exit = 0;
 
