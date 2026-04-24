@@ -135,6 +135,54 @@ ax.FontSize = 12;
 linkaxes(hStates,'x');
 sgtitle(sprintf('States vs Time'))
 
+
+%% Debugging
+idxToPlot = 1;
+simData = simDataCell{idxToPlot};
+figure();
+% ax = [];
+% ax(1) = subplot(4, 1, 1);
+% plot(simData.times, simData.debug.G11);
+% ylabel('y_1^Ty_1')
+% grid on;
+
+ax = [];
+ax(1) = subplot(4, 1, 1);
+plot(simData.times, simData.debug.lambda);
+ylabel('\lambda')
+legend('\lambda_1', '\lambda_2');
+grid on;
+
+% ax(2) =subplot(4, 1, 2);
+% plot(simData.times, simData.debug.p1);
+% ylabel('p_1')
+% grid on;
+
+ax(2) =subplot(4, 1, 2);
+plot(simData.times, simData.debug.p1);
+ylabel('p_1')
+grid on;
+
+ax(3) = subplot(4, 1, 3);
+plot(simData.times, simData.debug.modelMismatchTerm);
+ylabel('Model mismatch term')
+grid on;
+
+ax(4) = subplot(4, 1, 4);
+hold on;
+plot(simData.times, simData.debug.y1(1,:));
+plot(simData.times, simData.debug.y1(2,:));
+plot(simData.times, simData.debug.y1(3,:));
+plot(simData.times, simData.debug.y1(4,:));
+legend('\phi','\delta_e','\delta_c','slack')
+ylabel('y_1 terms')
+grid on;
+xlabel('Time (s)')
+
+sgtitle('CLF-CBF Debugging Plots Vs Time')
+linkaxes(ax,'x');
+
+
 end
 
 

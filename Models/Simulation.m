@@ -48,10 +48,19 @@ function [simData] = Simulation(xIC, fController, tEnd)
     simData.u = NaN(const.nInputs,nTimes);
     simData.slackVar = NaN(nTimes,1);
     simData.qBar = NaN(nTimes,1);
+    simData.controlMode = NaN(nTimes,1);
+    simData.debug.G11 = NaN(nTimes, 1);
+    simData.debug.p1 = NaN(nTimes,1);
+    simData.debug.modelMismatchTerm = NaN(nTimes,1);
+    simData.debug.y1 = NaN(4,nTimes);
+    simData.debug.lambda = NaN(2,nTimes);
     for i = 1:nTimes
         % Control Input
-        [simData.u(:,i),simData.slackVar(i)] = fController(simData.times(i), ...
-            simData.x(:,i), const);
+        [simData.u(:,i),simData.slackVar(i), simData.controlMode(i),...
+            simData.debug.G11(i), simData.debug.p1(i),...
+            simData.debug.modelMismatchTerm(i), simData.debug.y1(:,i), simData.debug.lambda(:,i)] = ...
+                    fController(simData.times(i), ...
+                                simData.x(:,i), const);
 
         % Qbar
         rho = getAtmo(simData.x(end,i), const);

@@ -1,4 +1,4 @@
-function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
+function [u, delta, mode, G11, p1, modelMismatchTerm, y1, lambda] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     %{
         Coupling CLF and CBF using KKT from paper to see how it behaves.
 
@@ -27,9 +27,6 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
     V = z' * P * z;
 
     eps = const.clf.eps;
-
-    %% TODO: Add abs(2*z'*P*G*l2*W)
-    %% NEED TO WORK OUT WHAT W and L2 correspond to
     modelMismatchTerm = getModelMismatchTerm(const, x, z, P);
 
     %% Define KKT terms
@@ -45,12 +42,11 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 
         % KKT Solution
         G = getG(y1,y2);
-        [lambda1, lambda2] = solveLambdaKKT(G, p1, p2);
+        G11 = G(1,1);
+        [lambda1, lambda2, mode] = solveLambdaKKT(G, p1, p2);
         
     else
-        %% TODO - maybe just convert this to PMN controller for now???
-
-
+        mode = 2;
         lambda2 = 0; % CBF
         y2 = zeros(4,1);
         G11 = y1'*y1;
@@ -59,20 +55,16 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
         else
             lambda1 = omegaFunc(-p1)/(y1'*y1);
         end
-
-
-        %% TODO - does this make sense if we don't use the slack var?
     end    
     
+    lambda = [lambda1; lambda2];
+
     % Extract Optimal u
     uStar = -lambda1 * y1 - lambda2 * y2;
     u = uStar(1:3);
     delta = uStar(4);
 
     %% Control Saturation
-
-    %% TODO - fin saturation was causing issues
-
     if abs(u(2)) > deg2rad(30)
         u(2) = deg2rad(30)*sign(u(2));
     end
@@ -90,22 +82,25 @@ function [u, delta] = CoupledCLF_CBF(t, x, const, refTrajFunc, P, fCBFactive)
 end
 
 %% Supporting Function
-function [lambda1, lambda2] = solveLambdaKKT(G, p1, p2)
+function [lambda1, lambda2, mode] = solveLambdaKKT(G, p1, p2)
     gCondNum = rcond(G);
     if -G(1,2)*omegaFunc(-p2) - G(2,2)*p1 < 0
         % lambda1 = 0 (only CBF active)
         lambda1 = 0;
         lambda2 = omegaFunc(-p2)/G(2,2);
+        mode = 1;
     elseif -G(2,1)*omegaFunc(-p1) - G(1,1)*p2 < 0
         % lambda2 = 0 (only CLF active)
         lambda1 = omegaFunc(-p1)/G(1,1);
         lambda2 = 0;   
+        mode = 2;
     else
         % Both active
         lambda = [omegaFunc(G(1,2)*p2 - G(2,2)*p1);
                   omegaFunc(G(2,1)*p1 - G(1,1)*p2)] ./ det(G); % Solve linear system
         lambda1 = lambda(1);
         lambda2 = lambda(2);
+        mode = 3;
     end
 end
 
