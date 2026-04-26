@@ -5,7 +5,6 @@ function [T] = getThrust(alpha, phiCmd, const)
     
     % clamp phi to valid range
     phi = max(0.0, min(phiCmd,1.2)); % Saturation
-    %% TODO - should i just allow it to go to zero???
     
     % Thrusting hard
     beta = const.thrust.beta;

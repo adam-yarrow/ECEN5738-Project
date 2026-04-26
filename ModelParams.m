@@ -6,7 +6,7 @@ function [const] = ModelParams(varargin)
 
     const = struct();
 
-    const.dT = 1E-2; % TODO - decide on this???
+    const.dT = 1E-2;
     const.continuous = true;
     
     const.nStates = 5;
